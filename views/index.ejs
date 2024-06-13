@@ -1,0 +1,67 @@
+
+<html>
+	<head>
+		<meta charset="UTF-8"/>
+		<title>Практика</title>
+        <meta name="author" content="Брагин. Алексей">
+        <meta name="viewport" content="width=device-width">
+        <meta name="viewport" content="height=max-device-height">
+        <style>
+        </style>
+	</head>
+	<body>
+        <main>
+            <form id="form1">
+                <input type="text" name="word">
+                <input type="submit">
+              </form>
+                <ul>
+                    <% content.forEach((el)=>{ %>
+                        <li><a href=  <%= el.data %> download> <%= el.word %> </a></li>
+                   <% }) %>
+                </ul>
+              
+              <script>
+                function create_download(data){
+
+                }
+                const formElem = document.getElementById('form1')
+                formElem.onsubmit = async (e) => {
+                  e.preventDefault();
+                  const formData = new FormData(formElem);
+                   data = formData.get('word');    
+                  myData = {info: data}
+                  myData = JSON.stringify(myData)
+                  let response = await fetch('/', {
+                    method: 'POST',
+                    headers: {
+                  'Content-Type': 'application/json'
+                          },
+                    body: myData
+                  });
+              
+                  let result = await response.json();
+                  
+                  if (result.word == 'false'){
+                    count = document.getElementById(1)
+                  if(count){
+                    await document.body.removeChild(count)
+                  }
+                    alert('Я не знаю данного слова')
+                  }
+                  else{
+                    count = document.getElementById(1)
+                  if(count){
+                    document.body.removeChild(count)
+                  }
+                    let div = document.createElement('div');
+                    div.setAttribute('id','1')
+                    div.innerHTML = `<a href="${result.data}"download>Скачать файл ${result.word} </a>`;
+                    document.body.append(div)
+                  }
+                };
+              </script>
+        </main>
+	</body>
+
+</html>
